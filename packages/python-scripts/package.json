@@ -1,0 +1,7 @@
+{
+  "name": "python-scripts",
+  "packageManager": "pnpm@10.10.0",
+  "scripts": {
+    "preinstall": "./setup-python.sh"
+  }
+}
