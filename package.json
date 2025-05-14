@@ -1,0 +1,8 @@
+{
+  "name": "clarity",
+  "packageManager": "pnpm@10.10.0",
+  "scripts": {
+    "dev": "pnpm --filter './packages/**' dev",
+    "build": "pnpm --filter './packages/**' build"
+  }
+}
