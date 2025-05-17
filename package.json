@@ -4,5 +4,8 @@
   "scripts": {
     "dev": "pnpm --filter './packages/**' dev",
     "build": "pnpm --filter './packages/**' build"
+  },
+  "dependencies": {
+    "react-async-hook": "^4.0.0"
   }
 }

@@ -1,7 +1,7 @@
 import { getSelectedText, Detail, ActionPanel, Action } from "@raycast/api";
 import path from "path";
 import { PythonShell } from "python-shell";
-import { useEffect, useState } from "react";
+import { useAsync } from "react-async-hook";
 
 async function fixGrammaticalErrors(inputText: string) {
   return new Promise<string>((resolve) => {
@@ -23,26 +23,26 @@ async function fixGrammaticalErrors(inputText: string) {
 }
 
 export default function Screen() {
-  const [selectedText, setSelectedText] = useState<string | null>(null);
-  useEffect(() => {
-    getSelectedText().then((r) => setSelectedText(r));
-  }, []);
+  const { result: selectedText, loading: isBusyGettingSelectedText } = useAsync(
+    getSelectedText,
+    []
+  );
+  const { result: fixedText, loading: isBusyFixingText } =
+    useAsync(async () => {
+      if (selectedText) {
+        return fixGrammaticalErrors(selectedText);
+      }
+    }, [selectedText]);
 
-  const [result, setResult] = useState<string | null>(null);
-  const isBusy = !result;
-  useEffect(() => {
-    if (selectedText) {
-      fixGrammaticalErrors(selectedText).then((r) => setResult(r));
-    }
-  }, [selectedText]);
+  const isBusy = isBusyGettingSelectedText || isBusyFixingText;
 
   return (
     <Detail
-      markdown={isBusy ? "🤔" : result}
+      markdown={isBusy ? "🤔" : fixedText}
       isLoading={isBusy}
       actions={
         <ActionPanel>
-          <Action.Paste content={result ?? selectedText ?? ""} />
+          <Action.Paste content={fixedText ?? selectedText ?? ""} />
         </ActionPanel>
       }
     ></Detail>
